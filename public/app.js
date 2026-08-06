@@ -357,20 +357,28 @@ document.addEventListener('DOMContentLoaded', () => {
           showToast('Invalid server response', 'error');
         }
       } else {
+        let errorMsg = `Upload failed (${xhr.status})`;
         try {
           const errData = JSON.parse(xhr.responseText);
-          showToast(errData.error || `Upload error (${xhr.status})`, 'error');
+          errorMsg = errData.error || errorMsg;
         } catch (e) {
-          showToast(`Upload failed (${xhr.status})`, 'error');
+          if (xhr.status === 413 || xhr.status === 500) {
+            errorMsg = `Upload Limit Error (${xhr.status}): Vercel serverless functions cap request body at 4.5MB. For 24MB+ files, host backend on Render/Railway.`;
+          }
         }
+        showToast(errorMsg, 'error');
+        showDiagnosticError(errorMsg);
       }
     };
 
     xhr.onerror = function() {
       btnSubmit.disabled = false;
       btnSubmit.innerHTML = `Upload File`;
-      showToast('Network error during upload', 'error');
+      const netError = 'Network or timeout error during upload.';
+      showToast(netError, 'error');
+      showDiagnosticError(netError);
     };
+
 
     xhr.send(formData);
   });
@@ -668,6 +676,23 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => toast.remove(), 300);
     }, 3500);
   }
+
+  function showDiagnosticError(msg) {
+    const diagnosticBanner = document.getElementById('diagnosticBanner');
+    const diagnosticMsg = document.getElementById('diagnosticMsg');
+    const btnCloseDiagnostic = document.getElementById('btnCloseDiagnostic');
+
+    if (btnCloseDiagnostic && !btnCloseDiagnostic.dataset.hasListener) {
+      btnCloseDiagnostic.dataset.hasListener = 'true';
+      btnCloseDiagnostic.addEventListener('click', () => {
+        if (diagnosticBanner) diagnosticBanner.classList.add('hidden');
+      });
+    }
+
+    if (diagnosticMsg) diagnosticMsg.textContent = msg;
+    if (diagnosticBanner) diagnosticBanner.classList.remove('hidden');
+  }
+
 
   function escapeHtml(str) {
     if (!str) return '';

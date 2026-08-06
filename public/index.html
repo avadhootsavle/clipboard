@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Kalkulus Securytas</title>
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -44,12 +44,19 @@
       </div>
     </header>
 
-    <!-- Render Cold Start Wake-Up Banner -->
+    <!-- Cold Start Wake-Up Banner -->
     <div class="server-wakeup-banner hidden" id="serverWakeupBanner">
       <div class="wakeup-content">
         <i class="fa-solid fa-spinner fa-spin wakeup-spinner"></i>
         <span>Server starting... Initializing cold start: <strong id="wakeupTimerCount">0s</strong></span>
       </div>
+    </div>
+
+    <!-- Diagnostic System Error Notice Banner -->
+    <div class="diagnostic-banner hidden" id="diagnosticBanner">
+      <i class="fa-solid fa-triangle-exclamation diagnostic-icon"></i>
+      <span id="diagnosticMsg">System Diagnostic Notice: Vercel serverless request payload limit is 4.5MB for file uploads.</span>
+      <button type="button" class="btn-icon" id="btnCloseDiagnostic" title="Dismiss"><i class="fa-solid fa-xmark"></i></button>
     </div>
 
     <!-- PIN Retrieval Section -->

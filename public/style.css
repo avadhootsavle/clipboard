@@ -141,20 +141,28 @@ body {
   color: var(--text-primary);
 }
 
-/* Render Cold Start Wake-Up Banner */
-.server-wakeup-banner {
-  background: var(--bg-card);
-  border: 1px solid var(--border-strong);
-  border-left: 4px solid var(--accent-white);
+/* System Diagnostic Error Banner */
+.diagnostic-banner {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-left: 4px solid #ef4444;
   border-radius: var(--radius-md);
   padding: 0.85rem 1.25rem;
   margin-bottom: 1.5rem;
   font-size: 0.88rem;
-  color: var(--text-primary);
+  color: #fca5a5;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
 }
+
+.diagnostic-icon {
+  color: #ef4444;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
 
 .wakeup-content {
   display: flex;
