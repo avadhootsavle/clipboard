@@ -17,8 +17,9 @@
   --accent-status: #00e676;
   --accent-wa: #25d366;
   
-  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  --font-sans: 'Plus Jakarta Sans', 'Outfit', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
+
   
   --radius-lg: 14px;
   --radius-md: 10px;
