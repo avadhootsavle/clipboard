@@ -333,7 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  fileUploadForm.addEventListener('submit', async (e) => {
+  fileUploadForm.addEventListener('submit', (e) => {
     e.preventDefault();
     if (!currentFile) {
       showToast('Select a file to upload', 'error');
@@ -347,36 +347,58 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const btnSubmit = document.getElementById('btnUploadSubmit');
     btnSubmit.disabled = true;
-    btnSubmit.innerHTML = `Uploading...`;
+    btnSubmit.innerHTML = `Uploading... 0%`;
 
-    try {
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData
-      });
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', '/api/upload', true);
 
-      const data = await response.json();
-      btnSubmit.disabled = false;
-      btnSubmit.innerHTML = `Upload File`;
-
-      if (data.success) {
-        fileUploadForm.reset();
-        currentFile = null;
-        filePreviewStrip.classList.add('hidden');
-        document.querySelector('.drop-zone-content').classList.remove('hidden');
-
-        openSuccessModal(data.clip);
-        loadStats();
-      } else {
-        showToast(data.error || 'Upload failed', 'error');
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable) {
+        const percent = Math.round((event.loaded / event.total) * 100);
+        btnSubmit.innerHTML = `Uploading... ${percent}%`;
       }
-    } catch (err) {
-      console.error('File upload error:', err);
+    };
+
+    xhr.onload = function() {
       btnSubmit.disabled = false;
       btnSubmit.innerHTML = `Upload File`;
-      showToast('Upload error', 'error');
-    }
+
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try {
+          const data = JSON.parse(xhr.responseText);
+          if (data.success) {
+            fileUploadForm.reset();
+            currentFile = null;
+            filePreviewStrip.classList.add('hidden');
+            document.querySelector('.drop-zone-content').classList.remove('hidden');
+
+            openSuccessModal(data.clip);
+            loadStats();
+          } else {
+            showToast(data.error || 'Upload failed', 'error');
+          }
+        } catch (e) {
+          showToast('Invalid server response', 'error');
+        }
+      } else {
+        try {
+          const errData = JSON.parse(xhr.responseText);
+          showToast(errData.error || `Upload error (${xhr.status})`, 'error');
+        } catch (e) {
+          showToast(`Upload failed (${xhr.status})`, 'error');
+        }
+      }
+    };
+
+    xhr.onerror = function() {
+      btnSubmit.disabled = false;
+      btnSubmit.innerHTML = `Upload File`;
+      showToast('Network error during upload', 'error');
+    };
+
+    xhr.send(formData);
   });
+
 
   // 7. Success PIN & WhatsApp Modal
   function openSuccessModal(clip) {

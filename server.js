@@ -38,7 +38,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 100 * 1024 * 1024 } // 100MB max per file
+  limits: { fileSize: 200 * 1024 * 1024 } // 200MB max per file
 });
 
 // Load / Save Data Persistence
@@ -102,11 +102,9 @@ function generateUniquePin() {
   let pin;
   let attempts = 0;
   do {
-    // Generate 4-digit PIN (e.g. 1000 - 9999)
     pin = Math.floor(1000 + Math.random() * 9000).toString();
     attempts++;
     if (attempts > 50) {
-      // Fallback to 6 digits if 4 digits run out
       pin = Math.floor(100000 + Math.random() * 900000).toString();
     }
   } while (clips.some(c => c.pin === pin));
@@ -125,7 +123,7 @@ app.post('/api/clip', (req, res) => {
 
   const durationMs = (expiryMinutes && parseInt(expiryMinutes) > 0) 
     ? parseInt(expiryMinutes) * 60 * 1000 
-    : 24 * 60 * 60 * 1000; // Default 24 hrs
+    : 24 * 60 * 60 * 1000;
 
   const isUrl = /^(http|https):\/\/[^ "]+$/.test(content.trim());
 
@@ -146,52 +144,62 @@ app.post('/api/clip', (req, res) => {
   res.json({ success: true, clip: newClip });
 });
 
-// 2. Upload File Clip (PPTX, PDF, Docs, Images, etc.)
-app.post('/api/upload', upload.single('file'), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: 'No file uploaded' });
-  }
-
-  const expiryMinutes = req.body.expiryMinutes || 1440; // Default 24 hours
-  const durationMs = parseInt(expiryMinutes) * 60 * 1000;
-  
-  const originalName = req.file.originalname;
-  const ext = path.extname(originalName).toLowerCase();
-  
-  let fileCategory = 'document';
-  if (['.ppt', '.pptx', '.key', '.odp'].includes(ext)) fileCategory = 'presentation';
-  else if (['.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp'].includes(ext)) fileCategory = 'image';
-  else if (['.mp4', '.mov', '.avi', '.mkv', '.webm'].includes(ext)) fileCategory = 'video';
-  else if (['.mp3', '.wav', '.aac', '.m4a', '.ogg', '.flac'].includes(ext)) fileCategory = 'audio';
-  else if (['.pdf'].includes(ext)) fileCategory = 'pdf';
-  else if (['.zip', '.rar', '.7z', '.tar', '.gz'].includes(ext)) fileCategory = 'archive';
-  else if (['.js', '.py', '.html', '.css', '.json', '.cpp', '.java', '.txt'].includes(ext)) fileCategory = 'code';
-
-
-  const newClip = {
-    id: 'file_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
-    pin: generateUniquePin(),
-    type: 'file',
-    title: req.body.title || originalName,
-    category: fileCategory,
-    createdAt: Date.now(),
-    expiresAt: Date.now() + durationMs,
-    views: 0,
-    fileInfo: {
-      originalName: originalName,
-      storedName: req.file.filename,
-      mimeType: req.file.mimetype,
-      size: req.file.size,
-      path: req.file.path,
-      url: `/uploads/${req.file.filename}`
+// 2. Upload File Clip with Error Handling & Extended Timeout
+app.post('/api/upload', (req, res) => {
+  upload.single('file')(req, res, (err) => {
+    if (err instanceof multer.MulterError) {
+      console.error('Multer upload error:', err);
+      return res.status(400).json({ error: `Upload limit exceeded: ${err.message}` });
+    } else if (err) {
+      console.error('File processing error:', err);
+      return res.status(500).json({ error: `File upload error: ${err.message}` });
     }
-  };
 
-  clips.unshift(newClip);
-  saveData();
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
 
-  res.json({ success: true, clip: newClip });
+    const expiryMinutes = req.body.expiryMinutes || 1440;
+    const durationMs = parseInt(expiryMinutes) * 60 * 1000;
+    
+    const originalName = req.file.originalname;
+    const ext = path.extname(originalName).toLowerCase();
+    
+    let fileCategory = 'document';
+    if (['.ppt', '.pptx', '.key', '.odp'].includes(ext)) fileCategory = 'presentation';
+    else if (['.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp'].includes(ext)) fileCategory = 'image';
+    else if (['.mp4', '.mov', '.avi', '.mkv', '.webm'].includes(ext)) fileCategory = 'video';
+    else if (['.mp3', '.wav', '.aac', '.m4a', '.ogg', '.flac'].includes(ext)) fileCategory = 'audio';
+    else if (['.pdf'].includes(ext)) fileCategory = 'pdf';
+    else if (['.zip', '.rar', '.7z', '.tar', '.gz'].includes(ext)) fileCategory = 'archive';
+    else if (['.js', '.py', '.html', '.css', '.json', '.cpp', '.java', '.txt'].includes(ext)) fileCategory = 'code';
+
+    const newClip = {
+      id: 'file_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+      pin: generateUniquePin(),
+      type: 'file',
+      title: req.body.title || originalName,
+      category: fileCategory,
+      createdAt: Date.now(),
+      expiresAt: Date.now() + durationMs,
+      views: 0,
+      fileInfo: {
+        originalName: originalName,
+        storedName: req.file.filename,
+        mimeType: req.file.mimetype,
+        size: req.file.size,
+        path: req.file.path,
+        url: `/uploads/${req.file.filename}`
+      }
+    };
+
+    clips.unshift(newClip);
+    saveData();
+
+    res.json({ success: true, clip: newClip });
+  });
 });
+
 
 // 3. Fetch Clip by PIN
 app.get('/api/pin/:pin', (req, res) => {
