@@ -8,7 +8,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- QR Code Library -->
@@ -23,7 +22,7 @@
       <div class="header-brand">
         <div class="brand-text">
           <h1>Kalkulus Securytas</h1>
-          <span class="badge-status"><span class="pulse-dot"></span> Active</span>
+          <span class="badge-status" id="serverStatusBadge"><span class="pulse-dot"></span> Active</span>
         </div>
       </div>
 
@@ -44,6 +43,14 @@
         </button>
       </div>
     </header>
+
+    <!-- Render Cold Start Wake-Up Banner -->
+    <div class="server-wakeup-banner hidden" id="serverWakeupBanner">
+      <div class="wakeup-content">
+        <i class="fa-solid fa-spinner fa-spin wakeup-spinner"></i>
+        <span>Server starting... Initializing cold start: <strong id="wakeupTimerCount">0s</strong></span>
+      </div>
+    </div>
 
     <!-- PIN Retrieval Section -->
     <section class="quick-retrieve-hero">

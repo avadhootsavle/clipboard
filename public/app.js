@@ -62,6 +62,12 @@ document.addEventListener('DOMContentLoaded', () => {
   let activeClips = [];
   let currentFilter = 'all';
   let activeCreatedClip = null;
+  let wakeupTimerInterval = null;
+  let wakeupSeconds = 0;
+
+  // Render Cold Start Banner Elements
+  const serverWakeupBanner = document.getElementById('serverWakeupBanner');
+  const wakeupTimerCount = document.getElementById('wakeupTimerCount');
 
   // Initialize
   initApp();
@@ -73,6 +79,27 @@ document.addEventListener('DOMContentLoaded', () => {
     loadStats();
     checkUrlPinParam();
   }
+
+  function startWakeupTimer() {
+    if (wakeupTimerInterval) return;
+    wakeupSeconds = 0;
+    if (wakeupTimerCount) wakeupTimerCount.textContent = '0s';
+    if (serverWakeupBanner) serverWakeupBanner.classList.remove('hidden');
+
+    wakeupTimerInterval = setInterval(() => {
+      wakeupSeconds++;
+      if (wakeupTimerCount) wakeupTimerCount.textContent = `${wakeupSeconds}s`;
+    }, 1000);
+  }
+
+  function stopWakeupTimer() {
+    if (wakeupTimerInterval) {
+      clearInterval(wakeupTimerInterval);
+      wakeupTimerInterval = null;
+    }
+    if (serverWakeupBanner) serverWakeupBanner.classList.add('hidden');
+  }
+
 
   // 1. Auto URL PIN Lookup (e.g. ?pin=8392)
   function checkUrlPinParam() {
@@ -564,17 +591,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 9. Load Stats
   async function loadStats() {
+    const timerTimeout = setTimeout(() => {
+      startWakeupTimer();
+    }, 1200);
+
     try {
       const res = await fetch('/api/stats');
       const data = await res.json();
+      clearTimeout(timerTimeout);
+      stopWakeupTimer();
+
       if (data.success) {
         statStorage.textContent = data.stats.formattedStorage;
         statClips.textContent = `${data.stats.totalClips} Files`;
       }
     } catch (e) {
+      clearTimeout(timerTimeout);
+      stopWakeupTimer();
       console.error('Stats error:', e);
     }
   }
+
 
   // Modals close
   btnCloseSuccessModal.addEventListener('click', () => pinSuccessModal.classList.add('hidden'));
