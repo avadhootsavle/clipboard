@@ -44,14 +44,11 @@
       </div>
     </header>
 
-    <!-- Instant Cross-Device Retrieval Bar -->
+    <!-- PIN Retrieval Section -->
     <section class="quick-retrieve-hero">
       <div class="retrieve-card">
-        <div class="retrieve-badge">
-          <i class="fa-solid fa-bolt-lightning"></i> Instant Retrieval
-        </div>
         <h2>Enter 4-Digit PIN</h2>
-        <p>Enter your 4-digit PIN code on any device or browser to fetch your stored data, source code, presentations, or files.</p>
+        <p>Retrieve stored files, code, or text across your devices.</p>
         
         <form id="pinRetrieveForm" class="pin-form">
           <div class="pin-input-wrapper">
@@ -59,13 +56,13 @@
             <input 
               type="text" 
               id="pinInput" 
-              placeholder="Enter PIN" 
+              placeholder="PIN" 
               maxlength="8" 
               autocomplete="off" 
               required
             />
             <button type="submit" class="btn btn-primary" id="btnFetchPin">
-              <i class="fa-solid fa-arrow-down-to-bracket"></i> Fetch Data
+              Retrieve
             </button>
           </div>
         </form>
@@ -75,36 +72,36 @@
     <!-- Navigation Tabs -->
     <nav class="app-tabs">
       <button class="tab-btn active" data-tab="tab-drop">
-        <i class="fa-solid fa-paste"></i> Text & Code Clipboard
+        Text & Code
       </button>
       <button class="tab-btn" data-tab="tab-upload">
-        <i class="fa-solid fa-cloud-arrow-up"></i> Upload Files
+        Files & Media
       </button>
       <button class="tab-btn" data-tab="tab-vault">
-        <i class="fa-solid fa-box-archive"></i> Storage Vault (<span id="vaultCount">0</span>)
+        Storage Vault (<span id="vaultCount">0</span>)
       </button>
     </nav>
 
-    <!-- Tab 1: Text & Code Clipboard -->
+    <!-- Tab 1: Text & Code -->
     <main class="tab-content active" id="tab-drop">
       <div class="card">
         <div class="card-header">
-          <h3><i class="fa-solid fa-copy"></i> Unlimited Text & Code Clipboard</h3>
-          <p>Transfer unlimited text, full source code repositories, links, or notes instantly across any device.</p>
+          <h3>Text & Code Transfer</h3>
+          <p>Transfer text snippets, code, or links to another device.</p>
         </div>
         <form id="textClipForm">
           <div class="form-group">
             <label for="textTitle">Title (Optional)</label>
-            <input type="text" id="textTitle" class="form-control" placeholder="Enter title" />
+            <input type="text" id="textTitle" class="form-control" placeholder="Title" />
           </div>
           <div class="form-group">
-            <label for="textContent">Content / Source Code *</label>
-            <textarea id="textContent" class="form-control code-font" rows="8" placeholder="Paste your text, code, or link here (No length limit)..." required></textarea>
+            <label for="textContent">Content *</label>
+            <textarea id="textContent" class="form-control code-font" rows="8" placeholder="Paste text or code here..." required></textarea>
           </div>
           
           <div class="form-row">
             <div class="form-group col">
-              <label for="textExpiry"><i class="fa-regular fa-clock"></i> Auto-Delete Expiration</label>
+              <label for="textExpiry">Auto-Delete Expiration</label>
               <select id="textExpiry" class="form-control">
                 <option value="60">1 Hour</option>
                 <option value="1440" selected>24 Hours</option>
@@ -114,7 +111,7 @@
             </div>
             <div class="form-group col btn-align-end">
               <button type="submit" class="btn btn-primary btn-block">
-                <i class="fa-solid fa-wand-magic-sparkles"></i> Generate PIN
+                Generate PIN
               </button>
             </div>
           </div>
@@ -126,19 +123,19 @@
     <main class="tab-content" id="tab-upload">
       <div class="card">
         <div class="card-header">
-          <h3><i class="fa-solid fa-folder-open"></i> Upload Files & Media</h3>
-          <p>Supports PPTX, Video, Audio, PDF, Documents, Code, Images, Zip (Up to 100MB).</p>
+          <h3>File Upload</h3>
+          <p>Supports documents, media, code, presentations, and archives up to 100MB.</p>
         </div>
 
         <form id="fileUploadForm">
           <div class="drop-zone" id="dropZone">
             <div class="drop-zone-content">
               <i class="fa-solid fa-cloud-arrow-up drop-icon"></i>
-              <h4>Drag & Drop File Here</h4>
-              <p>Supports all temporary file types</p>
+              <h4>Drop file here</h4>
+              <p>Or click browse to select a file</p>
               <div class="browse-btn-wrapper">
                 <button type="button" class="btn btn-secondary btn-sm" id="btnBrowseFiles">
-                  <i class="fa-solid fa-file-import"></i> Browse Files
+                  Browse File
                 </button>
                 <input type="file" id="fileInput" class="hidden-file-input" />
               </div>
@@ -156,13 +153,13 @@
           </div>
 
           <div class="form-group mt-3">
-            <label for="fileTitle">Custom Title (Optional)</label>
-            <input type="text" id="fileTitle" class="form-control" placeholder="Enter custom file title" />
+            <label for="fileTitle">Title (Optional)</label>
+            <input type="text" id="fileTitle" class="form-control" placeholder="Title" />
           </div>
 
           <div class="form-row">
             <div class="form-group col">
-              <label for="fileExpiry"><i class="fa-regular fa-clock"></i> Auto-Delete Expiration</label>
+              <label for="fileExpiry">Auto-Delete Expiration</label>
               <select id="fileExpiry" class="form-control">
                 <option value="60">1 Hour</option>
                 <option value="1440" selected>24 Hours</option>
@@ -172,7 +169,7 @@
             </div>
             <div class="form-group col btn-align-end">
               <button type="submit" class="btn btn-primary btn-block" id="btnUploadSubmit">
-                <i class="fa-solid fa-upload"></i> Upload & Get PIN
+                Upload File
               </button>
             </div>
           </div>
@@ -185,16 +182,16 @@
       <div class="vault-controls">
         <div class="search-box">
           <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="text" id="vaultSearch" placeholder="Search files, PINs, code, or content..." />
+          <input type="text" id="vaultSearch" placeholder="Search files or PINs..." />
         </div>
         <div class="filter-chips">
-          <button class="chip active" data-filter="all">All Files</button>
-          <button class="chip" data-filter="presentation"><i class="fa-solid fa-file-powerpoint"></i> PPTs</button>
-          <button class="chip" data-filter="video"><i class="fa-solid fa-video"></i> Videos</button>
-          <button class="chip" data-filter="audio"><i class="fa-solid fa-file-audio"></i> Audios</button>
-          <button class="chip" data-filter="pdf"><i class="fa-solid fa-file-pdf"></i> PDFs</button>
-          <button class="chip" data-filter="document"><i class="fa-solid fa-file-word"></i> Docs</button>
-          <button class="chip" data-filter="text"><i class="fa-solid fa-note-sticky"></i> Text & Code</button>
+          <button class="chip active" data-filter="all">All</button>
+          <button class="chip" data-filter="presentation">PPT</button>
+          <button class="chip" data-filter="video">Video</button>
+          <button class="chip" data-filter="audio">Audio</button>
+          <button class="chip" data-filter="pdf">PDF</button>
+          <button class="chip" data-filter="document">Document</button>
+          <button class="chip" data-filter="text">Text & Code</button>
         </div>
       </div>
 
@@ -202,8 +199,8 @@
 
       <div class="empty-state hidden" id="emptyState" style="text-align: center; padding: 4rem 1rem;">
         <i class="fa-solid fa-folder-open" style="font-size: 3rem; color: var(--text-secondary); margin-bottom: 1rem;"></i>
-        <h3>No Files Found</h3>
-        <p class="text-secondary">Upload a file or paste text to generate your PIN.</p>
+        <h3>No Files Available</h3>
+        <p class="text-secondary">Upload a file or paste text to generate a PIN.</p>
       </div>
     </main>
   </div>
@@ -213,29 +210,29 @@
     <div class="modal-box">
       <button class="modal-close" id="btnCloseSuccessModal"><i class="fa-solid fa-xmark"></i></button>
       <div class="modal-header" style="text-align: center;">
-        <div style="font-size: 3rem; margin-bottom: 0.5rem;"><i class="fa-solid fa-circle-check"></i></div>
-        <h3>PIN Created</h3>
-        <p class="text-secondary">Use this code on any device to retrieve your data.</p>
+        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;"><i class="fa-solid fa-circle-check"></i></div>
+        <h3>PIN Generated</h3>
+        <p class="text-secondary">Use this PIN code to retrieve your data.</p>
       </div>
 
       <div class="pin-display-box">
         <span class="pin-label">PIN CODE</span>
         <div class="pin-code-giant" id="modalPinCode">----</div>
         <button class="btn btn-sm btn-secondary" id="btnCopyPin">
-          <i class="fa-regular fa-copy"></i> Copy PIN
+          Copy PIN
         </button>
       </div>
 
       <div class="qr-whatsapp-wrapper">
         <div class="qr-container">
           <div id="qrcodeCanvas"></div>
-          <span>Scan with Phone</span>
+          <span>Scan with device</span>
         </div>
         <div class="whatsapp-direct-box">
-          <h4><i class="fa-brands fa-whatsapp text-whatsapp"></i> WhatsApp Access</h4>
-          <p>Send PIN & link directly to WhatsApp.</p>
+          <h4>WhatsApp Share</h4>
+          <p>Send PIN and link directly to WhatsApp.</p>
           <button class="btn btn-whatsapp btn-block" id="btnSendWhatsapp">
-            <i class="fa-brands fa-whatsapp"></i> Send to WhatsApp
+            <i class="fa-brands fa-whatsapp"></i> Share to WhatsApp
           </button>
         </div>
       </div>
@@ -248,9 +245,9 @@
       <button class="modal-close" id="btnClosePayloadModal"><i class="fa-solid fa-xmark"></i></button>
       
       <div class="modal-header">
-        <div class="retrieve-badge" id="payloadTypeBadge"><i class="fa-solid fa-file"></i> Payload</div>
+        <div class="retrieve-badge" id="payloadTypeBadge">File</div>
         <h3 id="payloadTitle">Title</h3>
-        <span class="text-secondary" style="font-size: 0.85rem;"><i class="fa-solid fa-key"></i> PIN: <strong id="payloadPin">----</strong></span>
+        <span class="text-secondary" style="font-size: 0.85rem;">PIN: <strong id="payloadPin">----</strong></span>
       </div>
 
       <div class="payload-body" id="payloadBodyContainer"></div>
@@ -267,26 +264,26 @@
     <div class="modal-box">
       <button class="modal-close" id="btnCloseWaGuide"><i class="fa-solid fa-xmark"></i></button>
       <div class="modal-header">
-        <h3><i class="fa-brands fa-whatsapp text-whatsapp"></i> WhatsApp Access</h3>
-        <p>Cross-device access instructions:</p>
+        <h3>WhatsApp Access</h3>
+        <p>Instructions for sharing data:</p>
       </div>
 
       <div style="margin: 1.5rem 0; display: flex; flex-direction: column; gap: 1rem;">
         <div>
-          <strong>1. Message Yourself</strong>
-          <p class="text-secondary" style="font-size: 0.85rem;">Send 4-digit PINs to your WhatsApp chat.</p>
+          <strong>1. Share PIN</strong>
+          <p class="text-secondary" style="font-size: 0.85rem;">Send 4-digit PINs via WhatsApp chat.</p>
         </div>
         <div>
-          <strong>2. Direct Sharing</strong>
-          <p class="text-secondary" style="font-size: 0.85rem;">Use the WhatsApp share button to send PINs & links instantly.</p>
+          <strong>2. Direct Link</strong>
+          <p class="text-secondary" style="font-size: 0.85rem;">Use the WhatsApp share button to send PINs and links.</p>
         </div>
         <div>
-          <strong>3. Device Retrieval</strong>
-          <p class="text-secondary" style="font-size: 0.85rem;">Enter the 4-digit PIN on any device or browser to fetch your data.</p>
+          <strong>3. Device Access</strong>
+          <p class="text-secondary" style="font-size: 0.85rem;">Enter the PIN on any browser to access stored files.</p>
         </div>
       </div>
 
-      <button class="btn btn-primary btn-block" id="btnCloseWaGuideBtn">Got it!</button>
+      <button class="btn btn-primary btn-block" id="btnCloseWaGuideBtn">Close</button>
     </div>
   </div>
 

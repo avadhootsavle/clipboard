@@ -1,4 +1,4 @@
-// Cloud Vault & Temporary Clipboard Application JavaScript
+// Kalkulus Securytas Application JavaScript
 
 document.addEventListener('DOMContentLoaded', () => {
   // Elements
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
     const pin = pinInput.value.trim();
     if (!pin) {
-      showToast('Please enter a valid PIN code', 'error');
+      showToast('Enter a valid PIN', 'error');
       return;
     }
     fetchPinPayload(pin);
@@ -115,43 +115,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function fetchPinPayload(pin) {
     try {
-      showToast('Searching PIN database...', 'info');
+      showToast('Searching...', 'info');
       const response = await fetch(`/api/pin/${encodeURIComponent(pin)}`);
       const data = await response.json();
 
       if (!data.success || !data.clip) {
-        showToast(data.error || 'Invalid or expired PIN', 'error');
+        showToast(data.error || 'PIN not found or expired', 'error');
         return;
       }
 
       openPayloadModal(data.clip);
-      showToast('Payload retrieved!', 'success');
     } catch (err) {
       console.error('Fetch PIN error:', err);
-      showToast('Error connecting to server', 'error');
+      showToast('Connection error', 'error');
     }
   }
 
-  // 4. Payload Viewer Modal (Audio, Video, PPT, Docs, Text)
+  // 4. Payload Viewer Modal
   function openPayloadModal(clip) {
-    payloadTitle.textContent = clip.title || 'Untitled Data';
+    payloadTitle.textContent = clip.title || 'Untitled';
     payloadPin.textContent = clip.pin;
 
-    let badgeIcon = 'fa-file';
-    let typeText = 'FILE';
-    
+    let typeText = 'File';
     if (clip.type === 'file') {
-      badgeIcon = getFileIconClass(clip.category);
       typeText = (clip.category || 'File').toUpperCase();
     } else if (clip.type === 'url') {
-      badgeIcon = 'fa-link';
-      typeText = 'WEB LINK';
+      typeText = 'Link';
     } else {
-      badgeIcon = 'fa-note-sticky';
-      typeText = 'TEXT CLIPBOARD';
+      typeText = 'Text';
     }
 
-    payloadTypeBadge.innerHTML = `<i class="fa-solid ${badgeIcon}"></i> ${typeText}`;
+    payloadTypeBadge.textContent = typeText;
 
     payloadBodyContainer.innerHTML = '';
     payloadFooterActions.innerHTML = '';
@@ -170,7 +164,6 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="media-player-container">
             <video controls autoplay name="media">
               <source src="${fileUrl}" type="${clip.fileInfo.mimeType || 'video/mp4'}">
-              Your browser does not support video playback.
             </video>
           </div>
         `;
@@ -179,7 +172,6 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="media-player-container">
             <audio controls style="width: 100%;">
               <source src="${fileUrl}" type="${clip.fileInfo.mimeType || 'audio/mpeg'}">
-              Your browser does not support audio playback.
             </audio>
           </div>
         `;
@@ -189,14 +181,14 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="payload-file-box">
           <i class="fa-solid ${getFileIconClass(category)} file-hero-icon"></i>
           <h3>${originalName}</h3>
-          <p class="text-secondary mt-1">Size: ${formattedSize} • Expire: ${formatExpiryTime(clip.expiresAt)}</p>
+          <p class="text-secondary mt-1">${formattedSize} • Expires in ${formatExpiryTime(clip.expiresAt)}</p>
           ${mediaPreviewHtml}
         </div>
       `;
 
       payloadFooterActions.innerHTML = `
         <a href="/api/download/${clip.id}" class="btn btn-primary" download="${originalName}">
-          <i class="fa-solid fa-download"></i> Download File
+          Download File
         </a>
       `;
     } else {
@@ -208,16 +200,16 @@ document.addEventListener('DOMContentLoaded', () => {
       if (clip.type === 'url') {
         payloadFooterActions.innerHTML = `
           <a href="${escapeHtml(content)}" target="_blank" rel="noopener" class="btn btn-accent">
-            <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Link
+            Open Link
           </a>
           <button class="btn btn-primary" onclick="copyTextToClipboard('${escapeJs(content)}')">
-            <i class="fa-regular fa-copy"></i> Copy Link
+            Copy Link
           </button>
         `;
       } else {
         payloadFooterActions.innerHTML = `
           <button class="btn btn-primary" onclick="copyTextToClipboard('${escapeJs(content)}')">
-            <i class="fa-regular fa-copy"></i> Copy All Text
+            Copy Text
           </button>
         `;
       }
@@ -249,11 +241,11 @@ document.addEventListener('DOMContentLoaded', () => {
         openSuccessModal(data.clip);
         loadStats();
       } else {
-        showToast(data.error || 'Failed to create clip', 'error');
+        showToast(data.error || 'Error creating clip', 'error');
       }
     } catch (err) {
       console.error('Create clip error:', err);
-      showToast('Error connecting to server', 'error');
+      showToast('Server connection error', 'error');
     }
   });
 
@@ -317,7 +309,7 @@ document.addEventListener('DOMContentLoaded', () => {
   fileUploadForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!currentFile) {
-      showToast('Please select a file, presentation, video or audio to upload', 'error');
+      showToast('Select a file to upload', 'error');
       return;
     }
 
@@ -328,7 +320,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const btnSubmit = document.getElementById('btnUploadSubmit');
     btnSubmit.disabled = true;
-    btnSubmit.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Uploading...`;
+    btnSubmit.innerHTML = `Uploading...`;
 
     try {
       const response = await fetch('/api/upload', {
@@ -338,7 +330,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const data = await response.json();
       btnSubmit.disabled = false;
-      btnSubmit.innerHTML = `<i class="fa-solid fa-upload"></i> Upload & Get PIN Code`;
+      btnSubmit.innerHTML = `Upload File`;
 
       if (data.success) {
         fileUploadForm.reset();
@@ -354,8 +346,8 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (err) {
       console.error('File upload error:', err);
       btnSubmit.disabled = false;
-      btnSubmit.innerHTML = `<i class="fa-solid fa-upload"></i> Upload & Get PIN Code`;
-      showToast('Error uploading file', 'error');
+      btnSubmit.innerHTML = `Upload File`;
+      showToast('Upload error', 'error');
     }
   });
 
@@ -383,7 +375,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   btnCopyPin.addEventListener('click', () => {
     if (activeCreatedClip) {
-      copyTextToClipboard(activeCreatedClip.pin, 'PIN copied to clipboard!');
+      copyTextToClipboard(activeCreatedClip.pin, 'PIN copied');
     }
   });
 
@@ -392,8 +384,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const pin = activeCreatedClip.pin;
       const title = activeCreatedClip.title;
       const shareUrl = `${window.location.origin}/?pin=${pin}`;
-      const msg = `⚡ *Kalkulus Securytas*\n\n📌 *PIN:* \`${pin}\`\n📁 *Title:* ${title}\n🌐 *Link:* ${shareUrl}\n\nEnter the PIN code on your browser to fetch instantly!`;
-
+      const msg = `Kalkulus Securytas\n\nPIN: ${pin}\nTitle: ${title}\nLink: ${shareUrl}`;
       
       const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(msg)}`;
       window.open(whatsappUrl, '_blank');
@@ -462,14 +453,14 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.btn-card-copy').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const text = e.currentTarget.getAttribute('data-content');
-        copyTextToClipboard(text, 'Copied to clipboard!');
+        copyTextToClipboard(text, 'Copied to clipboard');
       });
     });
 
     document.querySelectorAll('.btn-card-delete').forEach(btn => {
       btn.addEventListener('click', async (e) => {
         const id = e.currentTarget.getAttribute('data-id');
-        if (confirm('Delete this clip from your vault?')) {
+        if (confirm('Delete this item?')) {
           await deleteClip(id);
         }
       });
@@ -480,8 +471,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const pin = e.currentTarget.getAttribute('data-pin');
         const title = e.currentTarget.getAttribute('data-title');
         const shareUrl = `${window.location.origin}/?pin=${pin}`;
-        const msg = `⚡ *Kalkulus Securytas*\n\n📌 *PIN:* \`${pin}\`\n📁 *Title:* ${title}\n🌐 *Link:* ${shareUrl}`;
-
+        const msg = `Kalkulus Securytas\n\nPIN: ${pin}\nTitle: ${title}\nLink: ${shareUrl}`;
         window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
       });
     });
@@ -491,7 +481,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const isFile = clip.type === 'file';
     const iconClass = isFile ? getFileIconClass(clip.category) : (clip.type === 'url' ? 'fa-link' : 'fa-note-sticky');
 
-    const title = escapeHtml(clip.title || (isFile ? clip.fileInfo.originalName : 'Clipboard Note'));
+    const title = escapeHtml(clip.title || (isFile ? clip.fileInfo.originalName : 'Note'));
     const expiryText = formatExpiryTime(clip.expiresAt);
     let snippet = '';
 
@@ -522,16 +512,16 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="item-actions">
             ${isFile ? `
               <a href="/api/download/${clip.id}" class="btn btn-sm btn-primary" download="${escapeHtml(clip.fileInfo.originalName)}" title="Download File">
-                <i class="fa-solid fa-download"></i> Download
+                Download
               </a>
             ` : `
               <button class="btn btn-sm btn-primary btn-card-copy" data-content="${escapeJs(clip.content)}" title="Copy Content">
-                <i class="fa-regular fa-copy"></i> Copy
+                Copy
               </button>
             `}
             
             <button class="btn btn-sm btn-secondary btn-card-view" data-id="${clip.id}" title="View Details">
-              <i class="fa-regular fa-eye"></i>
+              View
             </button>
             <button class="btn btn-sm btn-secondary btn-card-wa" data-pin="${clip.pin}" data-title="${title}" title="Share to WhatsApp">
               <i class="fa-brands fa-whatsapp text-whatsapp"></i>
@@ -563,12 +553,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const res = await fetch(`/api/clips/${id}`, { method: 'DELETE' });
       const data = await res.json();
       if (data.success) {
-        showToast('Clip deleted', 'success');
+        showToast('Item deleted', 'success');
         loadVaultClips();
         loadStats();
       }
     } catch (e) {
-      showToast('Error deleting clip', 'error');
+      showToast('Error deleting item', 'error');
     }
   }
 
@@ -630,7 +620,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.copyTextToClipboard = function(text, customMsg) {
     navigator.clipboard.writeText(text).then(() => {
-      showToast(customMsg || 'Copied to clipboard!', 'success');
+      showToast(customMsg || 'Copied to clipboard', 'success');
     }).catch(() => {
       showToast('Copy failed', 'error');
     });
