@@ -44,14 +44,14 @@
       </div>
     </header>
 
-    <!-- College PC Instant Retrieve Bar -->
+    <!-- Instant Cross-Device Retrieval Bar -->
     <section class="quick-retrieve-hero">
       <div class="retrieve-card">
         <div class="retrieve-badge">
           <i class="fa-solid fa-bolt-lightning"></i> Instant Retrieval
         </div>
         <h2>Enter 4-Digit PIN</h2>
-        <p>Type your PIN code to fetch your stored data, presentations, or files.</p>
+        <p>Enter your 4-digit PIN code on any device or browser to fetch your stored data, source code, presentations, or files.</p>
         
         <form id="pinRetrieveForm" class="pin-form">
           <div class="pin-input-wrapper">
@@ -75,7 +75,7 @@
     <!-- Navigation Tabs -->
     <nav class="app-tabs">
       <button class="tab-btn active" data-tab="tab-drop">
-        <i class="fa-solid fa-paste"></i> Text Clipboard
+        <i class="fa-solid fa-paste"></i> Text & Code Clipboard
       </button>
       <button class="tab-btn" data-tab="tab-upload">
         <i class="fa-solid fa-cloud-arrow-up"></i> Upload Files
@@ -85,12 +85,12 @@
       </button>
     </nav>
 
-    <!-- Tab 1: Text & Links Drop -->
+    <!-- Tab 1: Text & Code Clipboard -->
     <main class="tab-content active" id="tab-drop">
       <div class="card">
         <div class="card-header">
-          <h3><i class="fa-solid fa-copy"></i> Text Clipboard Transfer</h3>
-          <p>Transfer text, code, or links between devices.</p>
+          <h3><i class="fa-solid fa-copy"></i> Unlimited Text & Code Clipboard</h3>
+          <p>Transfer unlimited text, full source code repositories, links, or notes instantly across any device.</p>
         </div>
         <form id="textClipForm">
           <div class="form-group">
@@ -98,8 +98,8 @@
             <input type="text" id="textTitle" class="form-control" placeholder="Enter title" />
           </div>
           <div class="form-group">
-            <label for="textContent">Content *</label>
-            <textarea id="textContent" class="form-control code-font" rows="5" placeholder="Paste content here..." required></textarea>
+            <label for="textContent">Content / Source Code *</label>
+            <textarea id="textContent" class="form-control code-font" rows="8" placeholder="Paste your text, code, or link here (No length limit)..." required></textarea>
           </div>
           
           <div class="form-row">
@@ -126,8 +126,8 @@
     <main class="tab-content" id="tab-upload">
       <div class="card">
         <div class="card-header">
-          <h3><i class="fa-solid fa-folder-open"></i> Upload Files</h3>
-          <p>Supports PPTX, Video, Audio, PDF, Documents, Images, Zip (Up to 100MB).</p>
+          <h3><i class="fa-solid fa-folder-open"></i> Upload Files & Media</h3>
+          <p>Supports PPTX, Video, Audio, PDF, Documents, Code, Images, Zip (Up to 100MB).</p>
         </div>
 
         <form id="fileUploadForm">
@@ -185,7 +185,7 @@
       <div class="vault-controls">
         <div class="search-box">
           <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="text" id="vaultSearch" placeholder="Search files, PINs, or content..." />
+          <input type="text" id="vaultSearch" placeholder="Search files, PINs, code, or content..." />
         </div>
         <div class="filter-chips">
           <button class="chip active" data-filter="all">All Files</button>
@@ -194,7 +194,7 @@
           <button class="chip" data-filter="audio"><i class="fa-solid fa-file-audio"></i> Audios</button>
           <button class="chip" data-filter="pdf"><i class="fa-solid fa-file-pdf"></i> PDFs</button>
           <button class="chip" data-filter="document"><i class="fa-solid fa-file-word"></i> Docs</button>
-          <button class="chip" data-filter="text"><i class="fa-solid fa-note-sticky"></i> Text</button>
+          <button class="chip" data-filter="text"><i class="fa-solid fa-note-sticky"></i> Text & Code</button>
         </div>
       </div>
 
@@ -203,7 +203,7 @@
       <div class="empty-state hidden" id="emptyState" style="text-align: center; padding: 4rem 1rem;">
         <i class="fa-solid fa-folder-open" style="font-size: 3rem; color: var(--text-secondary); margin-bottom: 1rem;"></i>
         <h3>No Files Found</h3>
-        <p class="text-secondary">Upload a file or text snippet to generate your PIN.</p>
+        <p class="text-secondary">Upload a file or paste text to generate your PIN.</p>
       </div>
     </main>
   </div>
@@ -215,7 +215,7 @@
       <div class="modal-header" style="text-align: center;">
         <div style="font-size: 3rem; margin-bottom: 0.5rem;"><i class="fa-solid fa-circle-check"></i></div>
         <h3>PIN Created</h3>
-        <p class="text-secondary">Use this code to retrieve your data.</p>
+        <p class="text-secondary">Use this code on any device to retrieve your data.</p>
       </div>
 
       <div class="pin-display-box">
@@ -282,7 +282,7 @@
         </div>
         <div>
           <strong>3. Device Retrieval</strong>
-          <p class="text-secondary" style="font-size: 0.85rem;">Enter the 4-digit PIN on any browser to fetch your data.</p>
+          <p class="text-secondary" style="font-size: 0.85rem;">Enter the 4-digit PIN on any device or browser to fetch your data.</p>
         </div>
       </div>
 
