@@ -1,6 +1,12 @@
 // Kalkulus Securytas Application JavaScript
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Determine API Base URL (Route Vercel deployments directly to Render backend)
+  const RENDER_BACKEND_URL = 'https://clipboard-iavb.onrender.com';
+  const API_BASE_URL = (window.location.hostname.includes('vercel.app')) 
+    ? RENDER_BACKEND_URL 
+    : window.location.origin;
+
   // Elements
   const tabs = document.querySelectorAll('.tab-btn');
   const tabContents = document.querySelectorAll('.tab-content');
@@ -100,7 +106,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (serverWakeupBanner) serverWakeupBanner.classList.add('hidden');
   }
 
-
   // 1. Auto URL PIN Lookup (e.g. ?pin=8392)
   function checkUrlPinParam() {
     const params = new URLSearchParams(window.location.search);
@@ -143,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
   async function fetchPinPayload(pin) {
     try {
       showToast('Searching...', 'info');
-      const response = await fetch(`/api/pin/${encodeURIComponent(pin)}`);
+      const response = await fetch(`${API_BASE_URL}/api/pin/${encodeURIComponent(pin)}`);
       const data = await response.json();
 
       if (!data.success || !data.clip) {
@@ -179,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (clip.type === 'file') {
       const category = clip.category;
-      const fileUrl = clip.fileInfo.url;
+      const fileUrl = clip.fileInfo.url.startsWith('http') ? clip.fileInfo.url : `${API_BASE_URL}${clip.fileInfo.url}`;
       const originalName = clip.fileInfo.originalName;
       const formattedSize = formatBytes(clip.fileInfo.size);
 
@@ -214,7 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
 
       payloadFooterActions.innerHTML = `
-        <a href="/api/download/${clip.id}" class="btn btn-primary" download="${originalName}">
+        <a href="${API_BASE_URL}/api/download/${clip.id}" class="btn btn-primary" download="${originalName}">
           Download File
         </a>
       `;
@@ -252,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!content) return;
 
     try {
-      const response = await fetch('/api/clip', {
+      const response = await fetch(`${API_BASE_URL}/api/clip`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -276,7 +281,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // 6. File Drag & Drop + Upload
+  // 6. File Drag & Drop + Upload via XMLHttpRequest to API_BASE_URL
   function setupDropZone() {
     btnBrowseFiles.addEventListener('click', () => fileInput.click());
     dropZone.addEventListener('click', (e) => {
@@ -350,7 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
     btnSubmit.innerHTML = `Uploading... 0%`;
 
     const xhr = new XMLHttpRequest();
-    xhr.open('POST', '/api/upload', true);
+    xhr.open('POST', `${API_BASE_URL}/api/upload`, true);
 
     xhr.upload.onprogress = (event) => {
       if (event.lengthComputable) {
@@ -399,7 +404,6 @@ document.addEventListener('DOMContentLoaded', () => {
     xhr.send(formData);
   });
 
-
   // 7. Success PIN & WhatsApp Modal
   function openSuccessModal(clip) {
     activeCreatedClip = clip;
@@ -443,7 +447,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 8. Load Storage Vault Clips
   async function loadVaultClips() {
     try {
-      const response = await fetch('/api/clips');
+      const response = await fetch(`${API_BASE_URL}/api/clips`);
       const data = await response.json();
 
       if (data.success) {
@@ -560,7 +564,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="item-bottom">
           <div class="item-actions">
             ${isFile ? `
-              <a href="/api/download/${clip.id}" class="btn btn-sm btn-primary" download="${escapeHtml(clip.fileInfo.originalName)}" title="Download File">
+              <a href="${API_BASE_URL}/api/download/${clip.id}" class="btn btn-sm btn-primary" download="${escapeHtml(clip.fileInfo.originalName)}" title="Download File">
                 Download
               </a>
             ` : `
@@ -599,7 +603,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function deleteClip(id) {
     try {
-      const res = await fetch(`/api/clips/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API_BASE_URL}/api/clips/${id}`, { method: 'DELETE' });
       const data = await res.json();
       if (data.success) {
         showToast('Item deleted', 'success');
@@ -618,7 +622,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 1200);
 
     try {
-      const res = await fetch('/api/stats');
+      const res = await fetch(`${API_BASE_URL}/api/stats`);
       const data = await res.json();
       clearTimeout(timerTimeout);
       stopWakeupTimer();
@@ -633,7 +637,6 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('Stats error:', e);
     }
   }
-
 
   // Modals close
   btnCloseSuccessModal.addEventListener('click', () => pinSuccessModal.classList.add('hidden'));
