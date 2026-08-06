@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cloud Vault & Temporary Online Clipboard</title>
+  <title>Kalkulus Securytas</title>
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,12 +20,9 @@
     <!-- Navbar / Header -->
     <header class="main-header">
       <div class="header-brand">
-        <div class="brand-icon">
-          <i class="fa-solid fa-vault"></i>
-        </div>
         <div class="brand-text">
-          <h1 id="userCloudTitle">Personal Cloud Vault</h1>
-          <span class="badge-status"><span class="pulse-dot"></span> Temporary Storage Active</span>
+          <h1>Kalkulus Securytas</h1>
+          <span class="badge-status"><span class="pulse-dot"></span> Active</span>
         </div>
       </div>
 
@@ -47,14 +44,14 @@
       </div>
     </header>
 
-    <!-- TOP PRIORITY: College PC Instant Retrieve Bar -->
+    <!-- College PC Instant Retrieve Bar -->
     <section class="quick-retrieve-hero">
       <div class="retrieve-card">
         <div class="retrieve-badge">
-          <i class="fa-solid fa-bolt-lightning"></i> College PC Quick Retrieval
+          <i class="fa-solid fa-bolt-lightning"></i> Instant Retrieval
         </div>
-        <h2>Enter 4-Digit Temporary PIN</h2>
-        <p>Type your PIN code generated from phone to instantly fetch your videos, PPTs, documents, audio, or text clips.</p>
+        <h2>Enter 4-Digit PIN</h2>
+        <p>Type your PIN code to fetch your stored data, presentations, or files.</p>
         
         <form id="pinRetrieveForm" class="pin-form">
           <div class="pin-input-wrapper">
@@ -62,7 +59,7 @@
             <input 
               type="text" 
               id="pinInput" 
-              placeholder="Enter 4-digit PIN (e.g. 4829)" 
+              placeholder="Enter PIN" 
               maxlength="8" 
               autocomplete="off" 
               required
@@ -78,13 +75,13 @@
     <!-- Navigation Tabs -->
     <nav class="app-tabs">
       <button class="tab-btn active" data-tab="tab-drop">
-        <i class="fa-solid fa-paste"></i> Quick Clipboard Text
+        <i class="fa-solid fa-paste"></i> Text Clipboard
       </button>
       <button class="tab-btn" data-tab="tab-upload">
-        <i class="fa-solid fa-cloud-arrow-up"></i> Upload Media, PPT & Files
+        <i class="fa-solid fa-cloud-arrow-up"></i> Upload Files
       </button>
       <button class="tab-btn" data-tab="tab-vault">
-        <i class="fa-solid fa-box-archive"></i> Temporary Vault (<span id="vaultCount">0</span>)
+        <i class="fa-solid fa-box-archive"></i> Storage Vault (<span id="vaultCount">0</span>)
       </button>
     </nav>
 
@@ -92,32 +89,32 @@
     <main class="tab-content active" id="tab-drop">
       <div class="card">
         <div class="card-header">
-          <h3><i class="fa-solid fa-copy"></i> Instant Text & Link Transfer</h3>
-          <p>Transfer code, links, or text snippets from your phone to college PC.</p>
+          <h3><i class="fa-solid fa-copy"></i> Text Clipboard Transfer</h3>
+          <p>Transfer text, code, or links between devices.</p>
         </div>
         <form id="textClipForm">
           <div class="form-group">
-            <label for="textTitle">Clip Description (Optional)</label>
-            <input type="text" id="textTitle" class="form-control" placeholder="e.g. Code Snippet, Presentation Link, or Lecture Notes" />
+            <label for="textTitle">Title (Optional)</label>
+            <input type="text" id="textTitle" class="form-control" placeholder="Enter title" />
           </div>
           <div class="form-group">
-            <label for="textContent">Text or Link Content *</label>
-            <textarea id="textContent" class="form-control code-font" rows="5" placeholder="Paste your text or link here..." required></textarea>
+            <label for="textContent">Content *</label>
+            <textarea id="textContent" class="form-control code-font" rows="5" placeholder="Paste content here..." required></textarea>
           </div>
           
           <div class="form-row">
             <div class="form-group col">
               <label for="textExpiry"><i class="fa-regular fa-clock"></i> Auto-Delete Expiration</label>
               <select id="textExpiry" class="form-control">
-                <option value="60">1 Hour (College Class)</option>
-                <option value="1440" selected>24 Hours (Standard)</option>
+                <option value="60">1 Hour</option>
+                <option value="1440" selected>24 Hours</option>
                 <option value="4320">3 Days</option>
                 <option value="10080">7 Days</option>
               </select>
             </div>
             <div class="form-group col btn-align-end">
               <button type="submit" class="btn btn-primary btn-block">
-                <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Temporary PIN
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Generate PIN
               </button>
             </div>
           </div>
@@ -125,20 +122,20 @@
       </div>
     </main>
 
-    <!-- Tab 2: Upload Media & Files -->
+    <!-- Tab 2: Upload Files -->
     <main class="tab-content" id="tab-upload">
       <div class="card">
         <div class="card-header">
-          <h3><i class="fa-solid fa-folder-open"></i> Upload Videos, Audio, PPTs & Documents</h3>
-          <p>Supports <strong>PPTX, Videos (.mp4, .mov), Audio (.mp3, .wav), PDF, Word, Images, Zip</strong> (Up to 100MB).</p>
+          <h3><i class="fa-solid fa-folder-open"></i> Upload Files</h3>
+          <p>Supports PPTX, Video, Audio, PDF, Documents, Images, Zip (Up to 100MB).</p>
         </div>
 
         <form id="fileUploadForm">
           <div class="drop-zone" id="dropZone">
             <div class="drop-zone-content">
               <i class="fa-solid fa-cloud-arrow-up drop-icon"></i>
-              <h4>Drag & Drop File or Media Here</h4>
-              <p>Supports all temporary file types (PPTs, Video, Audio, Docs, Code)</p>
+              <h4>Drag & Drop File Here</h4>
+              <p>Supports all temporary file types</p>
               <div class="browse-btn-wrapper">
                 <button type="button" class="btn btn-secondary btn-sm" id="btnBrowseFiles">
                   <i class="fa-solid fa-file-import"></i> Browse Files
@@ -149,8 +146,8 @@
             <div class="file-preview-strip hidden" id="filePreviewStrip">
               <i class="fa-solid fa-file-lines file-preview-icon"></i>
               <div class="file-details">
-                <span class="file-name" id="previewFileName">filename.pptx</span>
-                <span class="file-size" id="previewFileSize">2.4 MB</span>
+                <span class="file-name" id="previewFileName">filename</span>
+                <span class="file-size" id="previewFileSize">0 KB</span>
               </div>
               <button type="button" class="btn-icon" id="btnRemoveFile" title="Remove file">
                 <i class="fa-solid fa-xmark"></i>
@@ -160,22 +157,22 @@
 
           <div class="form-group mt-3">
             <label for="fileTitle">Custom Title (Optional)</label>
-            <input type="text" id="fileTitle" class="form-control" placeholder="e.g. Lab Presentation Video or Audio Demo" />
+            <input type="text" id="fileTitle" class="form-control" placeholder="Enter custom file title" />
           </div>
 
           <div class="form-row">
             <div class="form-group col">
               <label for="fileExpiry"><i class="fa-regular fa-clock"></i> Auto-Delete Expiration</label>
               <select id="fileExpiry" class="form-control">
-                <option value="60">1 Hour (Temp File)</option>
-                <option value="1440" selected>24 Hours (College Day)</option>
+                <option value="60">1 Hour</option>
+                <option value="1440" selected>24 Hours</option>
                 <option value="4320">3 Days</option>
                 <option value="10080">7 Days</option>
               </select>
             </div>
             <div class="form-group col btn-align-end">
               <button type="submit" class="btn btn-primary btn-block" id="btnUploadSubmit">
-                <i class="fa-solid fa-upload"></i> Upload & Get PIN Code
+                <i class="fa-solid fa-upload"></i> Upload & Get PIN
               </button>
             </div>
           </div>
@@ -188,7 +185,7 @@
       <div class="vault-controls">
         <div class="search-box">
           <i class="fa-solid fa-magnifying-glass"></i>
-          <input type="text" id="vaultSearch" placeholder="Search files, videos, PPTs, or PIN codes..." />
+          <input type="text" id="vaultSearch" placeholder="Search files, PINs, or content..." />
         </div>
         <div class="filter-chips">
           <button class="chip active" data-filter="all">All Files</button>
@@ -206,7 +203,7 @@
       <div class="empty-state hidden" id="emptyState" style="text-align: center; padding: 4rem 1rem;">
         <i class="fa-solid fa-folder-open" style="font-size: 3rem; color: var(--text-secondary); margin-bottom: 1rem;"></i>
         <h3>No Files Found</h3>
-        <p class="text-secondary">Upload a file or text snippet to generate your 4-digit PIN.</p>
+        <p class="text-secondary">Upload a file or text snippet to generate your PIN.</p>
       </div>
     </main>
   </div>
@@ -217,13 +214,13 @@
       <button class="modal-close" id="btnCloseSuccessModal"><i class="fa-solid fa-xmark"></i></button>
       <div class="modal-header" style="text-align: center;">
         <div style="font-size: 3rem; margin-bottom: 0.5rem;"><i class="fa-solid fa-circle-check"></i></div>
-        <h3>Temporary PIN Created</h3>
-        <p class="text-secondary">Use this code on your college PC or scan with phone.</p>
+        <h3>PIN Created</h3>
+        <p class="text-secondary">Use this code to retrieve your data.</p>
       </div>
 
       <div class="pin-display-box">
-        <span class="pin-label">QUICK PIN CODE</span>
-        <div class="pin-code-giant" id="modalPinCode">8392</div>
+        <span class="pin-label">PIN CODE</span>
+        <div class="pin-code-giant" id="modalPinCode">----</div>
         <button class="btn btn-sm btn-secondary" id="btnCopyPin">
           <i class="fa-regular fa-copy"></i> Copy PIN
         </button>
@@ -236,7 +233,7 @@
         </div>
         <div class="whatsapp-direct-box">
           <h4><i class="fa-brands fa-whatsapp text-whatsapp"></i> WhatsApp Access</h4>
-          <p>Send PIN & link directly to your WhatsApp saved messages.</p>
+          <p>Send PIN & link directly to WhatsApp.</p>
           <button class="btn btn-whatsapp btn-block" id="btnSendWhatsapp">
             <i class="fa-brands fa-whatsapp"></i> Send to WhatsApp
           </button>
@@ -253,7 +250,7 @@
       <div class="modal-header">
         <div class="retrieve-badge" id="payloadTypeBadge"><i class="fa-solid fa-file"></i> Payload</div>
         <h3 id="payloadTitle">Title</h3>
-        <span class="text-secondary" style="font-size: 0.85rem;"><i class="fa-solid fa-key"></i> PIN: <strong id="payloadPin">8392</strong></span>
+        <span class="text-secondary" style="font-size: 0.85rem;"><i class="fa-solid fa-key"></i> PIN: <strong id="payloadPin">----</strong></span>
       </div>
 
       <div class="payload-body" id="payloadBodyContainer"></div>
@@ -271,21 +268,21 @@
       <button class="modal-close" id="btnCloseWaGuide"><i class="fa-solid fa-xmark"></i></button>
       <div class="modal-header">
         <h3><i class="fa-brands fa-whatsapp text-whatsapp"></i> WhatsApp Access</h3>
-        <p>How to use your cloud vault with WhatsApp:</p>
+        <p>Cross-device access instructions:</p>
       </div>
 
       <div style="margin: 1.5rem 0; display: flex; flex-direction: column; gap: 1rem;">
         <div>
           <strong>1. Message Yourself</strong>
-          <p class="text-secondary" style="font-size: 0.85rem;">Send temporary 4-digit PINs to your WhatsApp chat on your phone.</p>
+          <p class="text-secondary" style="font-size: 0.85rem;">Send 4-digit PINs to your WhatsApp chat.</p>
         </div>
         <div>
           <strong>2. Direct Sharing</strong>
-          <p class="text-secondary" style="font-size: 0.85rem;">Use the 1-click WhatsApp share button to send PINs & links instantly.</p>
+          <p class="text-secondary" style="font-size: 0.85rem;">Use the WhatsApp share button to send PINs & links instantly.</p>
         </div>
         <div>
-          <strong>3. College PC Retrieval</strong>
-          <p class="text-secondary" style="font-size: 0.85rem;">Open the link or enter the 4-digit PIN on any college browser to fetch your data.</p>
+          <strong>3. Device Retrieval</strong>
+          <p class="text-secondary" style="font-size: 0.85rem;">Enter the 4-digit PIN on any browser to fetch your data.</p>
         </div>
       </div>
 

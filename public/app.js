@@ -392,7 +392,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const pin = activeCreatedClip.pin;
       const title = activeCreatedClip.title;
       const shareUrl = `${window.location.origin}/?pin=${pin}`;
-      const msg = `⚡ *Cloud Vault Transfer*\n\n📌 *PIN:* \`${pin}\`\n📁 *Title:* ${title}\n🌐 *Link:* ${shareUrl}\n\nEnter the PIN code on your college PC browser to fetch instantly!`;
+      const msg = `⚡ *Kalkulus Securytas*\n\n📌 *PIN:* \`${pin}\`\n📁 *Title:* ${title}\n🌐 *Link:* ${shareUrl}\n\nEnter the PIN code on your browser to fetch instantly!`;
+
       
       const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(msg)}`;
       window.open(whatsappUrl, '_blank');
@@ -479,7 +480,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const pin = e.currentTarget.getAttribute('data-pin');
         const title = e.currentTarget.getAttribute('data-title');
         const shareUrl = `${window.location.origin}/?pin=${pin}`;
-        const msg = `⚡ *Cloud Vault Transfer*\n\n📌 *PIN:* \`${pin}\`\n📁 *Title:* ${title}\n🌐 *Link:* ${shareUrl}`;
+        const msg = `⚡ *Kalkulus Securytas*\n\n📌 *PIN:* \`${pin}\`\n📁 *Title:* ${title}\n🌐 *Link:* ${shareUrl}`;
+
         window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
       });
     });
