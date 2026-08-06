@@ -7,12 +7,19 @@
     "start": "node server.js",
     "dev": "node --watch server.js"
   },
-  "keywords": ["cloud", "clipboard", "pin-transfer", "ppt-storage", "personal-vault"],
+  "keywords": [
+    "cloud",
+    "clipboard",
+    "pin-transfer",
+    "ppt-storage",
+    "personal-vault"
+  ],
   "author": "Avadhoot",
   "license": "MIT",
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.19.2",
-    "multer": "^1.4.5-lts.1"
+    "multer": "^1.4.5-lts.1",
+    "pdfkit": "^0.19.1"
   }
 }
