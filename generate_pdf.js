@@ -7,7 +7,9 @@ const doc = new PDFDocument({
   size: 'A4'
 });
 
-const outputPath = path.join(__dirname, 'Kalkulus_Securytas_Documentation.pdf');
+const outputPath = path.join(__dirname, 'Vercel_Data_Storage_Explanation.pdf');
+const publicPath = path.join(__dirname, 'public', 'vercel_storage_guide.pdf');
+
 const stream = fs.createWriteStream(outputPath);
 doc.pipe(stream);
 
@@ -15,75 +17,68 @@ doc.pipe(stream);
 const COLOR_BLACK = '#000000';
 const COLOR_DARK_GRAY = '#1a1a1a';
 const COLOR_LIGHT_GRAY = '#666666';
-const COLOR_ACCENT = '#000000';
-const COLOR_WHITE = '#ffffff';
 
-// Title Header
+// Header Title
 doc.fillColor(COLOR_BLACK)
-   .fontSize(26)
+   .fontSize(24)
    .font('Helvetica-Bold')
    .text('KALKULUS SECURYTAS', { align: 'left' });
 
 doc.fontSize(12)
    .font('Helvetica')
    .fillColor(COLOR_LIGHT_GRAY)
-   .text('Universal Temporary Cross-Device Data & File Storage System', { align: 'left' });
+   .text('How Data Storage & Serverless Execution Works on Vercel', { align: 'left' });
 
 doc.moveDown(0.5);
 doc.strokeColor('#cccccc').lineWidth(1).moveTo(40, doc.y).lineTo(555, doc.y).stroke();
 doc.moveDown(1);
 
-// Section 1: System Overview
-addSectionHeading('1. System Overview & Purpose');
-addParagraph('Kalkulus Securytas is a minimalist, ultra-fast cross-device clipboard and file sharing application. It enables users to transfer text snippets, full source code repositories, PowerPoint presentations, videos, audios, PDFs, and documents between any device or browser using a simple 4-digit numeric PIN code—without requiring account creation or login.');
-
-addParagraph('Key Requirement: 100% Temporary Storage. Every uploaded item has a configurable expiration timer (1 Hour, 24 Hours, 3 Days, 7 Days). Once expired, the background server cleanup routine automatically unlinks files from the disk and removes data from memory.');
-
-doc.moveDown(0.8);
-
-// Section 2: Technology Stack Used
-addSectionHeading('2. Technology Stack & Architecture');
-
-addBulletPoint('Frontend Layer', 'Built using HTML5, Vanilla ES6+ JavaScript, and modern CSS3 (Pitch-Black Minimalist design system, CSS Flexbox & Grid, responsive mobile media queries). Uses FontAwesome font icons and QRCode.js for mobile camera scanning.');
-
-addBulletPoint('Backend API Server', 'Powered by Node.js and Express.js REST APIs handling CORS, JSON body payloads (up to 100MB body parser limits), file downloads, and PIN queries.');
-
-addBulletPoint('File Upload Engine', 'Utilizes Multer middleware with disk storage engines for handling multipart file uploads (supporting PPTX, Video, Audio, PDF, Docs, Zip).');
-
-addBulletPoint('Data Persistence & Cleanup', 'JSON file-backed data store (`data_store.json`) with automatic fallback to `/tmp` directory on Vercel serverless environments. Background interval process runs every 60 seconds to purge expired clips.');
-
-addBulletPoint('Deployment Compatibility', 'Pre-configured with `vercel.json` for 1-click Vercel Serverless deployment, as well as 24/7 persistent hosting on Render, Railway, Koyeb, or local Node.js environment.');
+// Section 1: Executive Summary
+addSectionHeading('1. Executive Summary & Answer Key');
+addParagraph('If anyone asks you how Kalkulus Securytas stores data on Vercel, here is the exact 1-sentence answer to give them:');
+addHighlightBox('"Kalkulus Securytas uses Vercel Serverless Functions with a temporary ephemeral /tmp file system for 100% temporary, self-deleting data transfers between devices."');
 
 doc.moveDown(0.8);
 
-// Section 3: Step-by-Step Workflow
-addSectionHeading('3. Step-by-Step Workflow');
+// Section 2: Detailed Technical Architecture on Vercel
+addSectionHeading('2. Technical Storage Architecture on Vercel');
 
-addStep('Step 1: Data / File Upload (Sender Device)', 'Sender pastes text/code or drops a file (PPT, Video, Audio, PDF) and selects an expiration timer (1 Hour, 24 Hours, 3 Days, 7 Days).');
+addBulletPoint('Serverless Micro-Containers', 'Vercel executes Node.js Express routes as serverless functions. Each function runs inside an isolated micro-container that spins up instantly on demand.');
 
-addStep('Step 2: PIN Code & WhatsApp Generation', 'The server generates a unique 4-digit numeric PIN (e.g. 4829) and formats a 1-click WhatsApp share link with the PIN and direct URL.');
+addBulletPoint('The Ephemeral /tmp File System', 'On Vercel, standard file paths are read-only. However, Vercel provides a temporary writable directory located at `/tmp` (up to 512MB per instance).');
 
-addStep('Step 3: PIN Retrieval (Receiver Device)', 'On any receiving device or browser, the user enters the 4-digit PIN code. The server matches the PIN, increments view metrics, and opens the payload with 1-click Copy or File Download options.');
+addBulletPoint('File Payload Storage', 'When a user drops a PowerPoint, PDF, Video, Audio, or Document file, Multer writes the uploaded file to `/tmp/uploads/`.');
 
-addStep('Step 4: Automatic Disk Purge', 'When the clip reaches its expiration timestamp, the server unlinks the file from disk (`fs.unlinkSync`) and purges records from data storage.');
+addBulletPoint('PIN & Clip Metadata Storage', 'When a text clip, code snippet, or file PIN is generated, the server saves the clip object and PIN code (e.g. `4829`) into `/tmp/data_store.json`.');
 
 doc.moveDown(0.8);
 
-// Section 4: Technical API Reference
-addSectionHeading('4. REST API Technical Reference');
+// Section 3: The Data Lifecycle (Step-by-Step)
+addSectionHeading('3. Complete Data Lifecycle (How Data Travels)');
 
-addApiEndpoint('POST /api/clip', 'Creates text, code, or URL clip. Returns { pin, id, clip }.');
-addApiEndpoint('POST /api/upload', 'Uploads file payload via Multer multipart form. Returns { pin, id, clip }.');
-addApiEndpoint('GET /api/pin/:pin', 'Fetches active clip payload by 4-digit numeric PIN.');
-addApiEndpoint('GET /api/clips', 'Returns list of active non-expired storage vault items.');
-addApiEndpoint('DELETE /api/clips/:id', 'Manually deletes a clip and unlinks file from server storage.');
-addApiEndpoint('GET /api/download/:id', 'Streams file download attachment with original filename.');
-addApiEndpoint('GET /api/stats', 'Returns server metrics (total clips, total storage used in MB, uptime).');
+addStep('1. Upload & PIN Generation', 'User uploads a 24MB file or code snippet from phone. Vercel serverless function receives the payload, writes the file to `/tmp/uploads/`, assigns a unique 4-digit PIN (`4829`), and saves metadata to `/tmp/data_store.json`.');
+
+addStep('2. Instant Cross-Device Retrieval', 'Receiver opens the app on another device/browser and enters `4829`. Vercel serverless function reads `/tmp/data_store.json`, locates PIN `4829`, streams the file from `/tmp/uploads/`, and delivers the payload instantly.');
+
+addStep('3. Automatic Expiration & Disk Purge', 'A 60-second background cleanup routine continuously checks expiration timestamps. Once the clip expires (e.g. 1 hour or 24 hours), `fs.unlinkSync` permanently unlinks the file from disk, ensuring ZERO permanent data retention.');
+
+doc.moveDown(0.8);
+
+// Section 4: Key Interview / Q&A Reference Sheet
+addSectionHeading('4. Quick Q&A Reference Sheet (How to Answer Questions)');
+
+addQA('Q: Where are files stored on Vercel?', 'A: In Vercel\'s ephemeral `/tmp/uploads` directory attached to the serverless function environment.');
+
+addQA('Q: Is database setup (PostgreSQL / MongoDB) required?', 'A: No! Because Kalkulus Securytas is designed for 100% temporary transfers, using `/tmp` JSON file persistence eliminates external database costs and latency.');
+
+addQA('Q: What happens when files expire?', 'A: The server automatically calls `fs.unlinkSync()` to permanently purge the file from storage.');
+
+addQA('Q: What is Vercel\'s request payload limit?', 'A: Vercel Free (Hobby) tier allows up to 4.5MB per serverless request. For larger files (up to 200MB), Render persistent hosting can be used.');
 
 // Helper Functions
 function addSectionHeading(text) {
   doc.font('Helvetica-Bold')
-     .fontSize(14)
+     .fontSize(13)
      .fillColor(COLOR_BLACK)
      .text(text);
   doc.moveDown(0.3);
@@ -91,15 +86,24 @@ function addSectionHeading(text) {
 
 function addParagraph(text) {
   doc.font('Helvetica')
-     .fontSize(10)
+     .fontSize(9.5)
      .fillColor(COLOR_DARK_GRAY)
      .text(text, { align: 'justify', lineGap: 3 });
   doc.moveDown(0.4);
 }
 
+function addHighlightBox(text) {
+  doc.rect(40, doc.y, 515, 30).fillAndStroke('#f4f4f5', '#e4e4e7');
+  doc.font('Helvetica-BoldOblique')
+     .fontSize(9.5)
+     .fillColor(COLOR_BLACK)
+     .text(text, 50, doc.y - 22, { width: 495 });
+  doc.moveDown(0.8);
+}
+
 function addBulletPoint(title, desc) {
   doc.font('Helvetica-Bold')
-     .fontSize(10)
+     .fontSize(9.5)
      .fillColor(COLOR_BLACK)
      .text(`• ${title}: `, { continued: true });
   doc.font('Helvetica')
@@ -108,31 +112,32 @@ function addBulletPoint(title, desc) {
   doc.moveDown(0.3);
 }
 
-function addStep(stepTitle, stepDesc) {
+function addStep(title, desc) {
   doc.font('Helvetica-Bold')
-     .fontSize(10)
+     .fontSize(9.5)
      .fillColor(COLOR_BLACK)
-     .text(`${stepTitle}: `, { continued: true });
+     .text(`${title}: `, { continued: true });
   doc.font('Helvetica')
      .fillColor(COLOR_DARK_GRAY)
-     .text(stepDesc, { lineGap: 2 });
+     .text(desc, { lineGap: 2 });
   doc.moveDown(0.3);
 }
 
-function addApiEndpoint(endpoint, desc) {
-  doc.font('Courier-Bold')
-     .fontSize(9)
+function addQA(q, a) {
+  doc.font('Helvetica-Bold')
+     .fontSize(9.5)
      .fillColor(COLOR_BLACK)
-     .text(endpoint, { continued: true });
+     .text(q);
   doc.font('Helvetica')
      .fontSize(9)
      .fillColor(COLOR_DARK_GRAY)
-     .text(`  - ${desc}`, { lineGap: 2 });
-  doc.moveDown(0.2);
+     .text(a, { lineGap: 2 });
+  doc.moveDown(0.4);
 }
 
 doc.end();
 
 stream.on('finish', () => {
-  console.log(`PDF Documentation successfully created at: ${outputPath}`);
+  fs.copyFileSync(outputPath, publicPath);
+  console.log(`Vercel Data Storage PDF created successfully at: ${outputPath}`);
 });
