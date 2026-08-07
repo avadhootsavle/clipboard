@@ -1,7 +1,7 @@
-// Kalkulus Securytas Application JavaScript (Vercel Standalone Deployment)
+// Kalkulus Securytas Application JavaScript
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Relative API Base URL for direct Vercel deployment
+  // Relative API Base URL
   const API_BASE_URL = window.location.origin;
 
   // Elements
@@ -65,6 +65,12 @@ document.addEventListener('DOMContentLoaded', () => {
   let activeClips = [];
   let currentFilter = 'all';
   let activeCreatedClip = null;
+  let wakeupTimerInterval = null;
+  let wakeupSeconds = 0;
+
+  // Cold Start Banner Elements
+  const serverWakeupBanner = document.getElementById('serverWakeupBanner');
+  const wakeupTimerCount = document.getElementById('wakeupTimerCount');
 
   // Initialize
   initApp();
@@ -75,6 +81,26 @@ document.addEventListener('DOMContentLoaded', () => {
     loadVaultClips();
     loadStats();
     checkUrlPinParam();
+  }
+
+  function startWakeupTimer() {
+    if (wakeupTimerInterval) return;
+    wakeupSeconds = 0;
+    if (wakeupTimerCount) wakeupTimerCount.textContent = '0s';
+    if (serverWakeupBanner) serverWakeupBanner.classList.remove('hidden');
+
+    wakeupTimerInterval = setInterval(() => {
+      wakeupSeconds++;
+      if (wakeupTimerCount) wakeupTimerCount.textContent = `${wakeupSeconds}s`;
+    }, 1000);
+  }
+
+  function stopWakeupTimer() {
+    if (wakeupTimerInterval) {
+      clearInterval(wakeupTimerInterval);
+      wakeupTimerInterval = null;
+    }
+    if (serverWakeupBanner) serverWakeupBanner.classList.add('hidden');
   }
 
   // 1. Auto URL PIN Lookup (e.g. ?pin=8392)
@@ -361,24 +387,16 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
           const errData = JSON.parse(xhr.responseText);
           errorMsg = errData.error || errorMsg;
-        } catch (e) {
-          if (xhr.status === 413 || xhr.status === 500) {
-            errorMsg = `Upload Limit Error (${xhr.status}): Vercel serverless functions cap request body at 4.5MB. For 24MB+ files, host backend on Render/Railway.`;
-          }
-        }
+        } catch (e) {}
         showToast(errorMsg, 'error');
-        showDiagnosticError(errorMsg);
       }
     };
 
     xhr.onerror = function() {
       btnSubmit.disabled = false;
       btnSubmit.innerHTML = `Upload File`;
-      const netError = 'Network or timeout error during upload.';
-      showToast(netError, 'error');
-      showDiagnosticError(netError);
+      showToast('Network error during upload', 'error');
     };
-
 
     xhr.send(formData);
   });
@@ -596,14 +614,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 9. Load Stats
   async function loadStats() {
+    const timerTimeout = setTimeout(() => {
+      startWakeupTimer();
+    }, 1200);
+
     try {
       const res = await fetch(`${API_BASE_URL}/api/stats`);
       const data = await res.json();
+      clearTimeout(timerTimeout);
+      stopWakeupTimer();
+
       if (data.success) {
         statStorage.textContent = data.stats.formattedStorage;
         statClips.textContent = `${data.stats.totalClips} Files`;
       }
     } catch (e) {
+      clearTimeout(timerTimeout);
+      stopWakeupTimer();
       console.error('Stats error:', e);
     }
   }
@@ -676,23 +703,6 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => toast.remove(), 300);
     }, 3500);
   }
-
-  function showDiagnosticError(msg) {
-    const diagnosticBanner = document.getElementById('diagnosticBanner');
-    const diagnosticMsg = document.getElementById('diagnosticMsg');
-    const btnCloseDiagnostic = document.getElementById('btnCloseDiagnostic');
-
-    if (btnCloseDiagnostic && !btnCloseDiagnostic.dataset.hasListener) {
-      btnCloseDiagnostic.dataset.hasListener = 'true';
-      btnCloseDiagnostic.addEventListener('click', () => {
-        if (diagnosticBanner) diagnosticBanner.classList.add('hidden');
-      });
-    }
-
-    if (diagnosticMsg) diagnosticMsg.textContent = msg;
-    if (diagnosticBanner) diagnosticBanner.classList.remove('hidden');
-  }
-
 
   function escapeHtml(str) {
     if (!str) return '';
