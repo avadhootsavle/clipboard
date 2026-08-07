@@ -123,7 +123,7 @@ app.post('/api/clip', (req, res) => {
 
   const durationMs = (expiryMinutes && parseInt(expiryMinutes) > 0) 
     ? parseInt(expiryMinutes) * 60 * 1000 
-    : 24 * 60 * 60 * 1000;
+    : 30 * 60 * 1000; // 30 Minutes default
 
   const isUrl = /^(http|https):\/\/[^ "]+$/.test(content.trim());
 
@@ -159,8 +159,9 @@ app.post('/api/upload', (req, res) => {
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
-    const expiryMinutes = req.body.expiryMinutes || 1440;
+    const expiryMinutes = req.body.expiryMinutes || 30; // 30 Minutes default
     const durationMs = parseInt(expiryMinutes) * 60 * 1000;
+
     
     const originalName = req.file.originalname;
     const ext = path.extname(originalName).toLowerCase();
